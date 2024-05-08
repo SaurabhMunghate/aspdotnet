@@ -9,8 +9,19 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 // Add DbContext
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySQL(builder.Configuration.GetConnectionString("MySqlConnection")));
+// Assuming builder is an instance of WebHostBuilderContext
+
+string connectionString = builder.Configuration.GetConnectionString("MySqlConnection");
+
+if (connectionString != null)
+{
+    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+        options.UseMySQL(connectionString));
+}
+else
+{
+    // Handle the case when the connection string is null, perhaps by logging an error or using a default connection string.
+}
 
 
 var builder = WebApplication.CreateBuilder(args);

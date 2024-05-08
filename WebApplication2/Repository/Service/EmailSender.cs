@@ -27,10 +27,11 @@ namespace WebApplication2.Repository.Service
                     Port = configuration.GetValue<int>("AppSettings.EmailSetting.Port"),
                     EnableSSL = configuration.GetValue<bool>("AppSettings.EmailSetting.EnableSSL")
                 };
+            string fromAddress = getEmailSetting.From ?? "default@example.com"; 
 
             MailMessage mailMessage = new MailMessage()
             {
-                From = new MailAddress(getEmailSetting.From),
+                From = new MailAddress(fromAddress),
                 Subject = subject,
                 Body = message
             };
