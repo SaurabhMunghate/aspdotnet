@@ -1,5 +1,7 @@
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using WebApplication2.Data;
+using WebApplication2.Repository.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +12,28 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseMySQL(builder.Configuration.GetConnectionString("MySqlConnection")));
 
+
+var builder = WebApplication.CreateBuilder(args);
+// Cookie configuration for HTTP to support cookies with SameSite=None
+builder.Services.ConfigureSameSiteNoneCookies();
+
+// Cookie configuration for HTTPS
+//  builder.Services.Configure<CookiePolicyOptions>(options =>
+//  {
+//     options.MinimumSameSitePolicy = SameSiteMode.None;
+//  });
+builder.Services.AddAuth0WebAppAuthentication(options =>
+{
+    options.Domain = builder.Configuration["Auth0:Domain"];
+    options.ClientId = builder.Configuration["Auth0:ClientId"];
+});
+builder.Services.AddControllersWithViews();
 var app = builder.Build();
 
+
+var app = builder.Build();
+
+//builder.Services.AddTransient<IEmailSender, EmailSender>();
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
@@ -25,6 +47,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthorization();
+
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

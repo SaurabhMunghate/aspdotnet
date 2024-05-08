@@ -13,7 +13,7 @@ namespace WebApplication2.Controllers
     public class StudentsController : Controller
     {
         private readonly ApplicationDbContext _context;
-
+          
         public StudentsController(ApplicationDbContext context)
         {
             _context = context;
